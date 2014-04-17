@@ -12,6 +12,7 @@ subject { @user}
  it {should respond_to(:password_digest)}
  it {should respond_to(:password)}
  it {should respond_to(:password_confirmation)}
+ it {should respond_to(:authenicate)}
 
  it  {should be_valid }
 
@@ -80,4 +81,19 @@ describe "when confirmation is nil" do
    it {should_not be_valid}
  end
 
+  describe "return value  of authenication method" do
+     before {@user.save}
+     let( :found_user) { User.find_email(@user.email) }
+
+     describe "with valid passord" do
+      it { should == found_user.authenication(@user.passord)}
+    end
+
+    describe "with invalid password" do
+        let(:user_for_invalid_password) {found_user.authenicate("invalid") }
+
+        it {should_not == user_for_invalid_password }
+        specify { user_for_invalid_password.should be_false}
+    
+end
 
